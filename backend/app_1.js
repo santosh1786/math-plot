@@ -1,15 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { spawn } = require('child_process');
+const { PythonShell } = require('python-shell');
 const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
+// Endpoint to plot the function
 app.post('/plot', (req, res) => {
     const { functionStr, variables } = req.body;
     console.log('Received function:', functionStr);
@@ -18,26 +18,33 @@ app.post('/plot', (req, res) => {
     const pythonScriptPath = path.join(__dirname, 'plotter.py');
     console.log('Python script path:', pythonScriptPath);
 
-    const pythonProcess = spawn('python3', [pythonScriptPath, functionStr.replace('X', 'x'), variables.toString()]);
+    let options = {
+        mode: 'text',
+        pythonPath: '/usr/bin/python3', // Explicitly set the path to Python 3
+        pythonOptions: ['-u'], // Get print results in real-time
+        scriptPath: __dirname,
+        args: [functionStr.replace('X', 'x'), variables.toString()]
+    };
 
-    let dataString = '';
-
-    pythonProcess.stdout.on('data', (data) => {
-        dataString += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-        console.error('Error from Python script:', data.toString());
-    });
-
-    pythonProcess.on('close', (code) => {
-        console.log(`Python script exited with code ${code}`);
+    console.log('Starting Python script...');
+    PythonShell.run('plotter.py', options, (err, results) => {
+        console.log('Python script execution finished.'); // Ensure this is logged
+        if (err) {
+            console.error('Error running Python script:', err);
+            return res.status(500).send({ error: err.toString() });
+        }
+    
+        const rawOutput = results.join('');
+        console.log('Raw Python output:', rawOutput);  // Log raw output
+    
+        // Parse the JSON output
         try {
-            const output = JSON.parse(dataString);
+            const output = JSON.parse(rawOutput);
             if (output.error) {
                 console.error('Error from Python script:', output.error);
                 return res.status(500).send({ error: output.error });
             }
+    
             res.send({ image: `data:image/png;base64,${output.image}` });
         } catch (parseError) {
             console.error('Failed to parse Python output:', parseError);
@@ -46,6 +53,7 @@ app.post('/plot', (req, res) => {
     });
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
