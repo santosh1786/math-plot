@@ -1,20 +1,30 @@
-// frontend/src/App.js
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import Home from './components/Home';
+import Register from './components/Register';
+import Login from './components/Login';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import Plotter from './components/Plotter';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import './index.css';
+import ProtectedRoute from './components/ProtectedRoute';
 
-const App = () => {
-    return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
-            <Header />
-            <div className="flex-grow flex">
-                <Plotter />
-            </div>
-            <Footer />
-        </div>
-    );
-};
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Navigation />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/register" component={Register} />
+          <Route path="/login" component={Login} />
+          <Route path="/forgot-password" component={ForgotPassword} />
+          <Route path="/reset-password/:token" component={ResetPassword} />
+          <ProtectedRoute path="/plotter" component={Plotter} />
+        </Switch>
+      </div>
+    </Router>
+  );
+}
 
 export default App;
