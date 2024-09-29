@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import base64
 import json  # Import json for structured output
@@ -8,9 +9,17 @@ from sympy import symbols, sympify, lambdify
 import logging
 from logging.handlers import RotatingFileHandler
 
+# Set the backend to prevent GUI issues if not needed
+matplotlib.use('Agg')  # Use a non-interactive backend for script execution
+
 # Set up logging with rotation
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
+# Suppress matplotlib debug logs
+matplotlib_logger = logging.getLogger('matplotlib')
+matplotlib_logger.setLevel(logging.WARNING)  # Change to WARNING to suppress DEBUG logs
+
 
 # Create a rotating file handler
 handler = RotatingFileHandler(
