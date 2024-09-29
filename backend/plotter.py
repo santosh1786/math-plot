@@ -73,6 +73,7 @@ def main():
         output_buffer.seek(0)
         img_str = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
         logger.info("Successfully generated plot.")
+        logger.info(img_str)
         print(img_str)  # Print the Base64 string to stdout
 
     except Exception as e:
