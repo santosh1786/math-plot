@@ -28,7 +28,7 @@ app.post('/plot', (req, res) => {
 
     console.log('Starting Python script...');
     PythonShell.run('plotter.py', options, (err, results) => {
-        console.log('Python script execution finished.');
+        console.log('Python script execution finished.'); // Ensure this is logged
         if (err) {
             console.error('Error running Python script:', err);
             return res.status(500).send({ error: err.toString() });

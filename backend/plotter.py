@@ -100,6 +100,7 @@ def main():
             'status': 'success'
         }
         print(json.dumps(response))  # Print JSON to stdout
+        sys.stdout.flush()  # Flush output to ensure it's sent immediately
         logger.info("Print JSON happened")
         sys.exit(0)
 
