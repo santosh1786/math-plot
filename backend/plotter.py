@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
-from sympy import symbols, sympify
+from sympy import symbols, sympify, lambdify
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -20,7 +20,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 def main():
-    # Read function and variables from command line arguments
+    """Main function to process plotting requests."""
     if len(sys.argv) < 3:
         logger.error("Insufficient arguments provided. Usage: python plotter.py <function> <variables>")
         sys.exit(1)
@@ -40,26 +40,33 @@ def main():
         logger.info(f"Processing function: {function_str} with {variables} variable(s)")
         expr = sympify(function_str)
 
+        # Lambda function for evaluation
+        f_lambdified = lambdify(x, expr, modules='numpy')
+
         if variables == 1:
             x_vals = np.linspace(-10, 10, 400)
-            y_vals = [expr.evalf(subs={x: val}) for val in x_vals]
+            y_vals = f_lambdified(x_vals)
 
             plt.figure()
             plt.plot(x_vals, y_vals)
-            plt.title("2D Plot")
+            plt.title(f"Plot of f(x) = {function_str}")
             plt.xlabel("x")
             plt.ylabel("f(x)")
             plt.grid()
 
         elif variables == 2:
             y = symbols('y')
+            expr_2d = sympify(function_str)  # Allow for multi-variable expressions
+            f_lambdified_2d = lambdify((x, y), expr_2d, modules='numpy')
             x_vals = np.linspace(-10, 10, 50)
             y_vals = np.linspace(-10, 10, 50)
             X, Y = np.meshgrid(x_vals, y_vals)
-            Z = [[expr.evalf(subs={x: x_val, y: y_val}) for y_val in y_vals] for x_val in x_vals]
+            Z = f_lambdified_2d(X, Y)
 
             plt.figure()
-            plt.plot_surface(X, Y, Z, cmap='viridis')
+            ax = plt.axes(projection='3d')
+            ax.plot_surface(X, Y, Z, cmap='viridis')
+            ax.set_title(f"Plot of f(x, y) = {function_str}")
 
         else:
             logger.error(f"Unsupported number of variables: {variables}. Must be 1 or 2.")
@@ -73,7 +80,6 @@ def main():
         output_buffer.seek(0)
         img_str = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
         logger.info("Successfully generated plot.")
-        logger.info(img_str)
         print(img_str)  # Print the Base64 string to stdout
 
     except Exception as e:

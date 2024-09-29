@@ -3,13 +3,13 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { PythonShell } = require('python-shell');
 const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
+// Endpoint to plot the function
 app.post('/plot', (req, res) => {
     const { functionStr, variables } = req.body;
     console.log('Received function:', functionStr);
@@ -20,7 +20,7 @@ app.post('/plot', (req, res) => {
 
     let options = {
         mode: 'text',
-        pythonPath: '/usr/bin/python3',  // Explicitly set the path to Python 3
+        pythonPath: '/usr/bin/python3', // Explicitly set the path to Python 3
         pythonOptions: ['-u'], // Get print results in real-time
         scriptPath: __dirname,
         args: [functionStr.replace('X', 'x'), variables.toString()]
@@ -30,20 +30,22 @@ app.post('/plot', (req, res) => {
     PythonShell.run('plotter.py', options, (err, results) => {
         console.log('Python script execution finished.');
         if (err) {
-            console.error('Error running Python script:', err);
+            console.error('Error running Python script:', err); // Log the error
             return res.status(500).send({ error: err.toString() });
         }
 
-        console.log('Python script results:', results);
+        console.log('Python script results:', results); // Log the output
         const imgStr = results.join('').trim();
         if (!imgStr) {
             console.error('No image data returned from Python script');
             return res.status(500).send({ error: 'No image data returned from Python script' });
         }
-        res.send({ image: `data:image/png;base64,${imgStr}` });
+        
+        res.send({ image: `data:image/png;base64,${imgStr}` }); // Send the image
     });
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
