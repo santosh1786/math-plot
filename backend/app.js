@@ -30,19 +30,24 @@ app.post('/plot', (req, res) => {
     PythonShell.run('plotter.py', options, (err, results) => {
         console.log('Python script execution finished.');
         if (err) {
-            console.error('Error running Python script:', err); // Log the error
+            console.error('Error running Python script:', err);
             return res.status(500).send({ error: err.toString() });
         }
-
-        console.log('Python script results:', results); // Log the output
-        const imgStr = results.join('').trim();
-        if (!imgStr) {
-            console.error('No image data returned from Python script');
-            return res.status(500).send({ error: 'No image data returned from Python script' });
+    
+        // Parse the JSON output
+        try {
+            const output = JSON.parse(results.join(''));
+            if (output.error) {
+                console.error('Error from Python script:', output.error);
+                return res.status(500).send({ error: output.error });
+            }
+    
+            res.send({ image: `data:image/png;base64,${output.image}` });
+        } catch (parseError) {
+            console.error('Failed to parse Python output:', parseError);
+            return res.status(500).send({ error: 'Failed to parse Python output' });
         }
-        
-        res.send({ image: `data:image/png;base64,${imgStr}` }); // Send the image
-    });
+    });    
 });
 
 // Start the server

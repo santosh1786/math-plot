@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import base64
+import json  # Import json for structured output
 from io import BytesIO
 from sympy import symbols, sympify, lambdify
 import logging
@@ -23,6 +24,7 @@ def main():
     """Main function to process plotting requests."""
     if len(sys.argv) < 3:
         logger.error("Insufficient arguments provided. Usage: python plotter.py <function> <variables>")
+        print(json.dumps({'error': 'Insufficient arguments provided.'}))
         sys.exit(1)
 
     function_str = sys.argv[1].replace('X', 'x')  # Replace 'X' with 'x' for consistency
@@ -30,6 +32,7 @@ def main():
         variables = int(sys.argv[2])
     except ValueError:
         logger.error("Invalid number of variables provided. Must be an integer.")
+        print(json.dumps({'error': 'Invalid number of variables provided.'}))
         sys.exit(1)
 
     # Prepare the expression
@@ -70,6 +73,7 @@ def main():
 
         else:
             logger.error(f"Unsupported number of variables: {variables}. Must be 1 or 2.")
+            print(json.dumps({'error': 'Unsupported number of variables provided.'}))
             sys.exit(1)
 
         # Save the plot to the buffer
@@ -80,11 +84,17 @@ def main():
         output_buffer.seek(0)
         img_str = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
         logger.info("Successfully generated plot.")
-        print(img_str)  # Print the Base64 string to stdout
+
+        # Create a structured JSON response
+        response = {
+            'image': img_str,
+            'status': 'success'
+        }
+        print(json.dumps(response))  # Print JSON to stdout
 
     except Exception as e:
         logger.error(f"Error while processing function: {str(e)}", exc_info=True)
-        print(f"Error: {str(e)}", file=sys.stderr)
+        print(json.dumps({'error': str(e)}))  # Send error as JSON
         sys.exit(1)
 
 if __name__ == "__main__":
