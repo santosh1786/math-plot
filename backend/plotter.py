@@ -100,6 +100,8 @@ def main():
             'status': 'success'
         }
         print(json.dumps(response))  # Print JSON to stdout
+        logger.info("Print JSON happened")
+        sys.exit(0)
 
     except Exception as e:
         logger.error(f"Error while processing function: {str(e)}", exc_info=True)
