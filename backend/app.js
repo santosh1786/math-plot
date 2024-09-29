@@ -34,9 +34,12 @@ app.post('/plot', (req, res) => {
             return res.status(500).send({ error: err.toString() });
         }
     
+        const rawOutput = results.join('');
+        console.log('Raw Python output:', rawOutput);  // Log raw output
+    
         // Parse the JSON output
         try {
-            const output = JSON.parse(results.join(''));
+            const output = JSON.parse(rawOutput);
             if (output.error) {
                 console.error('Error from Python script:', output.error);
                 return res.status(500).send({ error: output.error });
@@ -47,7 +50,7 @@ app.post('/plot', (req, res) => {
             console.error('Failed to parse Python output:', parseError);
             return res.status(500).send({ error: 'Failed to parse Python output' });
         }
-    });    
+    });
 });
 
 // Start the server
