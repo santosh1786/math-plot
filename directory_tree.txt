@@ -1,9 +1,17 @@
 ├── .gitignore
 ├── backend/
 │   ├── app.js
+│   ├── config.js
+│   ├── controllers/
+│   │   └── authController.js
+│   ├── logger.js
+│   ├── models/
+│   │   └── User.js
 │   ├── output.png
 │   ├── plotter.py
-│   └── test_script.py
+│   ├── test_script.py
+│   └── utils/
+│       └── sendEmail.js
 ├── frontend/
 │   ├── .gitignore
 │   ├── public/
@@ -19,8 +27,17 @@
 │   │   ├── App.test.js
 │   │   ├── components/
 │   │   │   ├── Footer.js
+│   │   │   ├── ForgotPassword.js
 │   │   │   ├── Header.js
-│   │   │   └── Plotter.js
+│   │   │   ├── Home.js
+│   │   │   ├── Login.js
+│   │   │   ├── Navigation.js
+│   │   │   ├── Plotter.js
+│   │   │   ├── ProtectedRoute.js
+│   │   │   ├── Register.js
+│   │   │   └── ResetPassword.js
+│   │   ├── context/
+│   │   │   └── AuthContext.js
 │   │   ├── index.css
 │   │   ├── index.js
 │   │   ├── logo.svg
