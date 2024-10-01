@@ -29,6 +29,7 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+# Main Function here
 def main():
     """Main function to process plotting requests."""
     if len(sys.argv) < 3:
