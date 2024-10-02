@@ -26,9 +26,10 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route 
               path="/plotter" 
-              element={
-                isAuthenticated ? <Plotter /> : <Navigate to="/login" replace />
-              } 
+              //element={
+                //isAuthenticated ? <Plotter /> : <Navigate to="/login" replace />
+              //} 
+              element={<Plotter />} 
             />
           </Routes>
         </div>

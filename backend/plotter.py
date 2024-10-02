@@ -23,7 +23,7 @@ matplotlib_logger.setLevel(logging.WARNING)  # Change to WARNING to suppress DEB
 
 # Create a rotating file handler
 handler = RotatingFileHandler(
-    "plotter.log", maxBytes=5*1024*1024, backupCount=5  # 5 MB limit, keep 5 backup files
+    "plotter.log", maxBytes=5*1024*1024, backupCount=20  # 5 MB limit, keep 5 backup files
 )
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
