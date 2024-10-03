@@ -34,7 +34,7 @@ const Plotter = () => {
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen plot-container"> {/* Apply new class for layout */}
             <Rnd
                 default={{
                     x: 0,
@@ -79,7 +79,7 @@ const Plotter = () => {
                     {error && <p className="text-red-500">{error}</p>}
                 </div>
             </Rnd>
-            <div className="w-8/10 p-4 bg-gray-50">
+            <div className="plot-area"> {/* This container will adjust its width */}
                 {image && (
                     <div className="mt-4">
                         <img src={image} alt="Plot" className="max-w-full" />
