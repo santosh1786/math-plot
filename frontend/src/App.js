@@ -19,18 +19,12 @@ function App() {
         <Navigation />
         <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route 
-              path="/plotter" 
-              //element={
-                //isAuthenticated ? <Plotter /> : <Navigate to="/login" replace />
-              //} 
-              element={<Plotter />} 
-            />
+            <Route path="/reset-password/:token" element={<ResetPassword />} /> */}
+            <Route path="/plotter" element={<Plotter />} />
           </Routes>
         </div>
         <Footer />
