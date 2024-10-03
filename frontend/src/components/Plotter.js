@@ -34,31 +34,19 @@ const Plotter = () => {
     };
 
     return (
-        <div className="flex h-screen plot-container"> {/* Apply new class for layout */}
-            <Rnd
-                default={{
-                    x: 0,
-                    y: 0,
-                    width: "20%",
-                    height: "100%",
-                }}
-                minWidth="150"
-                minHeight="100%"
-                enableResizing={{ right: true }}
-                dragHandleClassName="handle"
-                className="bg-white border shadow-lg"
-            >
-                <div className="handle p-4 cursor-move">
-                    <h1 className="text-2xl font-bold">Math Function Plotter</h1>
+        <div className="flex h-screen">
+            <div className="w-1/4 p-4"> {/* Set a fixed width for the input section */}
+                <div className="bg-white border shadow-lg p-4 rounded">
+                    <h1 className="text-2xl font-bold mb-4">Math Function Plotter</h1>
                     <input
                         type="text"
-                        className="border border-gray-300 rounded p-2 my-4 w-full"
+                        className="border border-gray-300 rounded p-2 mb-4 w-full"
                         placeholder="Enter function (e.g., sin(x) + x^2)"
                         value={functionStr}
                         onChange={(e) => setFunctionStr(e.target.value)}
                     />
                     <select
-                        className="border border-gray-300 rounded p-2 my-2 w-full"
+                        className="border border-gray-300 rounded p-2 mb-4 w-full"
                         value={variables}
                         onChange={(e) => setVariables(e.target.value)}
                     >
@@ -78,8 +66,8 @@ const Plotter = () => {
                     )}
                     {error && <p className="text-red-500">{error}</p>}
                 </div>
-            </Rnd>
-            <div className="plot-area"> {/* This container will adjust its width */}
+            </div>
+            <div className="flex-grow p-4 bg-gray-50"> {/* Plot area takes the remaining space */}
                 {image && (
                     <div className="mt-4">
                         <img src={image} alt="Plot" className="max-w-full" />
