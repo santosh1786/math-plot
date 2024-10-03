@@ -1,25 +1,13 @@
+// frontend/src/components/Navigation.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const Navigation = () => {
-  const { isAuthenticated, logout } = useAuth();
-
   return (
-    <nav>
-      <ul>
+    <nav className="bg-gray-800 text-white p-4">
+      <ul className="flex space-x-4">
         <li><Link to="/">Home</Link></li>
-        {isAuthenticated ? (
-          <>
-            <li><Link to="/plotter">Plotter</Link></li>
-            <li><button onClick={logout}>Logout</button></li>
-          </>
-        ) : (
-          <>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/register">Register</Link></li>
-          </>
-        )}
+        <li><Link to="/plotter">Plotter</Link></li>
       </ul>
     </nav>
   );

@@ -1,6 +1,5 @@
 // frontend/src/components/Plotter.js
 import React, { useState } from 'react';
-import { Rnd } from 'react-rnd';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -16,10 +15,9 @@ const Plotter = () => {
             setError(''); // Reset error
             setLoading(true); // Start loading
 
-            // Explicitly set the headers for the POST request
-            const response = await axios.post('http://localhost:5000/plot', {
-                functionStr,  // Ensure this is being set
-                variables,    // Ensure this is being set
+            const response = await axios.post('http://192.168.1.16:5000/plot', {
+                functionStr,
+                variables,
             }, {
                 headers: {
                     'Content-Type': 'application/json' // Ensure JSON content type is set
@@ -35,58 +33,40 @@ const Plotter = () => {
     };
 
     return (
-        <div className="flex h-screen">
-            <Rnd
-                default={{
-                    x: 0,
-                    y: 0,
-                    width: "20%",
-                    height: "100%",
-                }}
-                minWidth="150"
-                minHeight="100%"
-                enableResizing={{ right: true }}
-                dragHandleClassName="handle"
-                className="bg-white border shadow-lg"
+        <div className="flex flex-col items-center h-screen p-4">
+            <h1 className="text-2xl font-bold mb-4">Math Function Plotter</h1>
+            <input
+                type="text"
+                className="border border-gray-300 rounded p-2 my-4 w-2/3"
+                placeholder="Enter function (e.g., sin(x) + x^2)"
+                value={functionStr}
+                onChange={(e) => setFunctionStr(e.target.value)}
+            />
+            <select
+                className="border border-gray-300 rounded p-2 my-2 w-2/3"
+                value={variables}
+                onChange={(e) => setVariables(e.target.value)}
             >
-                <div className="handle p-4 cursor-move">
-                    <h1 className="text-2xl font-bold">Math Function Plotter</h1>
-                    <input
-                        type="text"
-                        className="border border-gray-300 rounded p-2 my-4 w-full"
-                        placeholder="Enter function (e.g., sin(x) + x^2)"
-                        value={functionStr}
-                        onChange={(e) => setFunctionStr(e.target.value)}
-                    />
-                    <select
-                        className="border border-gray-300 rounded p-2 my-2 w-full"
-                        value={variables}
-                        onChange={(e) => setVariables(e.target.value)}
-                    >
-                        <option value={1}>1 Variable</option>
-                        <option value={2}>2 Variables</option>
-                    </select>
-                    <button
-                        className="bg-blue-500 text-white rounded px-4 py-2 w-full"
-                        onClick={handlePlot}
-                    >
-                        Plot
-                    </button>
-                    {loading && (
-                        <div className="flex justify-center my-4">
-                            <ThreeDots color="#00BFFF" height={80} width={80} />
-                        </div>
-                    )}
-                    {error && <p className="text-red-500">{error}</p>}
+                <option value={1}>1 Variable</option>
+                <option value={2}>2 Variables</option>
+            </select>
+            <button
+                className="bg-blue-500 text-white rounded px-4 py-2 w-2/3"
+                onClick={handlePlot}
+            >
+                Plot
+            </button>
+            {loading && (
+                <div className="flex justify-center my-4">
+                    <ThreeDots color="#00BFFF" height={80} width={80} />
                 </div>
-            </Rnd>
-            <div className="w-8/10 p-4 bg-gray-50">
-                {image && (
-                    <div className="mt-4">
-                        <img src={image} alt="Plot" className="max-w-full" />
-                    </div>
-                )}
-            </div>
+            )}
+            {error && <p className="text-red-500">{error}</p>}
+            {image && (
+                <div className="mt-4">
+                    <img src={image} alt="Plot" className="max-w-full" />
+                </div>
+            )}
         </div>
     );
 };
